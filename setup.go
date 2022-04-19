@@ -1,4 +1,4 @@
-package ptraggr
+package ptaggr
 
 import (
 	"github.com/coredns/coredns/core/dnsserver"
@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	caddy.RegisterPlugin("ptraggr", caddy.Plugin{
+	caddy.RegisterPlugin("ptaggr", caddy.Plugin{
 		ServerType: "dns",
 		Action:     setup,
 	})
@@ -18,7 +18,7 @@ func setup(c *caddy.Controller) error {
 	a := New()
 
 	for c.Next() {
-		// shift cursor past ptraggr
+		// shift cursor past ptaggr
 		if !c.Next() {
 			return c.ArgErr()
 		}
@@ -40,7 +40,7 @@ func setup(c *caddy.Controller) error {
 		handlers, err := initForwards(c)
 
 		if err != nil {
-			return plugin.Error("ptraggr", err)
+			return plugin.Error("ptaggr", err)
 		}
 
 		for _, hd := range handlers {

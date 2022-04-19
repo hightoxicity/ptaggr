@@ -1,4 +1,4 @@
-package ptraggr
+package ptaggr
 
 import (
 	"fmt"

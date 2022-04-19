@@ -1,4 +1,4 @@
-module github.com/hightoxicity/ptraggr
+module github.com/hightoxicity/ptaggr
 
 go 1.14
 

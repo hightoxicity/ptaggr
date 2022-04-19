@@ -1,5 +1,5 @@
-// Package ptraggr implements a ptraggr plugin for CoreDNS
-package ptraggr
+// Package ptaggr implements a ptaggr plugin for CoreDNS
+package ptaggr
 
 import (
 	"net"
@@ -14,9 +14,9 @@ import (
 	"github.com/miekg/dns"
 )
 
-// Ptraggr plugin allows an extra set of upstreams be specified which will be used
+// Ptaggr plugin allows an extra set of upstreams be specified which will be used
 // to serve an aggregated answer of all answers retrieved near those queried upstreams.
-type Ptraggr struct {
+type Ptaggr struct {
 	Next        plugin.Handler
 	rules       []rule
 	original    bool // At least one rule has "original" flag
@@ -37,15 +37,15 @@ type HandlerWithCallbacks interface {
 }
 
 // New initializes Alternate plugin
-func New() (f *Ptraggr) {
-	return &Ptraggr{}
+func New() (f *Ptaggr) {
+	return &Ptaggr{}
 }
 
 // ServeDNS implements the plugin.Handler interface.
-func (f Ptraggr) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg) (int, error) {
+func (f Ptaggr) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg) (int, error) {
 	state := request.Request{W: w, Req: r}
 
-	// If ptraggr has original option set for any rule then copy original request to use it instead of changed
+	// If ptaggr has original option set for any rule then copy original request to use it instead of changed
 	var originalRequest *dns.Msg
 	if f.original {
 		originalRequest = r.Copy()
@@ -116,7 +116,7 @@ func (f Ptraggr) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg)
 }
 
 // Name implements the Handler interface.
-func (f Ptraggr) Name() string { return "ptraggr" }
+func (f Ptaggr) Name() string { return "ptaggr" }
 
 func isRRPresent(searchRR dns.RR, intoRRs []dns.RR) bool {
 	present := false
