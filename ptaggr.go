@@ -8,11 +8,14 @@ import (
 
 	"github.com/coredns/coredns/plugin"
 	"github.com/coredns/coredns/plugin/pkg/dnsutil"
+	clog "github.com/coredns/coredns/plugin/pkg/log"
 	"github.com/coredns/coredns/plugin/pkg/nonwriter"
 	"github.com/coredns/coredns/request"
 
 	"github.com/miekg/dns"
 )
+
+var log = clog.NewWithPlugin("ptaggr")
 
 // Ptaggr plugin allows an extra set of upstreams be specified which will be used
 // to serve an aggregated answer of all answers retrieved near those queried upstreams.
@@ -87,15 +90,17 @@ func (f Ptaggr) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg) 
 				if ru.original && originalRequest != nil {
 					ru.handler.ServeDNS(ctx, nwh, originalRequest)
 				}
-				ru.handler.ServeDNS(ctx, nwh, r)
+				_, err = ru.handler.ServeDNS(ctx, nwh, r)
 
-				if len(nwh.Msg.Answer) > 0 {
-					if len(newR.Answer) == 0 {
-						newR = *nwh.Msg
-					} else {
-						for _, newRR := range nwh.Msg.Answer {
-							if !isRRPresent(newRR, newR.Answer) {
-								newR.Answer = append(newR.Answer, newRR)
+				if err == nil {
+					if len(nwh.Msg.Answer) > 0 {
+						if len(newR.Answer) == 0 {
+							newR = *nwh.Msg
+						} else {
+							for _, newRR := range nwh.Msg.Answer {
+								if !isRRPresent(newRR, newR.Answer) {
+									newR.Answer = append(newR.Answer, newRR)
+								}
 							}
 						}
 					}
